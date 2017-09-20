@@ -2,10 +2,16 @@ package pl.coderslab.web;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +27,7 @@ import pl.coderslab.entity.Category;
 @Controller
 @RequestMapping("/cartoon")
 public class CartoonController {
-
+	
 	@Autowired
 	CartoonDao cartoonDao;
 	
@@ -54,7 +60,11 @@ public class CartoonController {
 	}
 	
 	@PostMapping({"/add", "/modify/{id}"})
-	public String addForm(@ModelAttribute Cartoon cartoon) {
+	public String addForm(@Valid @ModelAttribute Cartoon cartoon, BindingResult result) {
+		if (result.hasErrors()) {
+			return "cartoonAdd";
+		}
+		
 		if (cartoon.getId() == null) {
 			cartoonDao.save(cartoon);
 		} else {
@@ -62,7 +72,7 @@ public class CartoonController {
 		}
 		return "redirect:/cartoon/list";
 	}
-	
+	//<form:errors path="age" cssClass="error" />
 	@RequestMapping("/modify/{id}")
 	public String modify(@PathVariable Long id, Model model) {
 		model.addAttribute("cartoon", cartoonDao.findById(id));
@@ -92,5 +102,24 @@ public class CartoonController {
 	public String details(@PathVariable Long id, Model model) {
 		model.addAttribute("cartoon", cartoonDao.findById(id));
 		return "cartoonDet";
+	}
+	
+	@Autowired
+	Validator validator;
+	
+	@RequestMapping("/validate")
+	@ResponseBody
+	public String validateTest() {
+		Cartoon c = new Cartoon(null, Long.valueOf(4), null, false, new Category());
+		String result = "";
+		Set<ConstraintViolation<Cartoon>> violations = validator.validate(c);
+		if (!violations.isEmpty()) {
+			for (ConstraintViolation<Cartoon> constraintViolation : violations) {
+				result +=
+						constraintViolation.getPropertyPath() + " " 
+						+ constraintViolation.getMessage() + "<br>";
+			}
+		} else {}
+		return result; 
 	}
 }

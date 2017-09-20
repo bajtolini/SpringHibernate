@@ -6,14 +6,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>List of Cartoons</title>
-	<style type="text/css">
-	table, th, tr, td {
-		border: 1px solid black;
-	}
-	table {
-		border-collapse: collapse;
-	}
-	</style>
+	<link rel="stylesheet" type="text/css" href='<c:url value="/resources/cart/css/cartoonStyle.css"/>'>
 </head>
 <body>
 	<table>
@@ -30,9 +23,11 @@
 				<td><a href="delete/${cart.id}" class="confirm">Usuń</a></td>
 			</tr>
 		</c:forEach>
-	</table>
-	<button><a href="/SpringHibernate/cartoon/add">Dodaj</a></button>
+		<tr><td colspan="4">
+			<button><a href="/SpringHibernate/cartoon/add" style="text-decoration: none">Dodaj</a></button>
+		</td></tr>
+	</table>	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script type="text/javascript" src='<c:url value="/resources/cartJS/del.js"/>'></script>
+	<script type="text/javascript" src='<c:url value="/resources/cart/js/del.js"/>'></script>
 </body>
 </html>

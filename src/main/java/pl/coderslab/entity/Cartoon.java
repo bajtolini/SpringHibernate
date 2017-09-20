@@ -6,6 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
+import pl.coderslab.validator.PrimeNumber;
 
 @Entity
 @Table(name = "cartoon")
@@ -14,8 +21,14 @@ public class Cartoon {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank
+	@Size(min = 2, max = 30)
 	private String name;
+	@NotNull
+	@Min(1)
+	@PrimeNumber
 	private Long age;
+	@NotBlank
 	private String color;
 	private boolean sex;
 	@ManyToOne
